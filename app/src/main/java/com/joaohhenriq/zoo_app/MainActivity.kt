@@ -35,7 +35,17 @@ class MainActivity : AppCompatActivity() {
         listViewItems.adapter = adapter
     }
 
-    class AnimalsAdapter: BaseAdapter {
+    fun deleteItem(index: Int) {
+        animalList.removeAt(index)
+        adapter?.notifyDataSetChanged()
+    }
+
+    fun addItem(index: Int) {
+        animalList.add(index, animalList[index])
+        adapter?.notifyDataSetChanged()
+    }
+
+    inner class AnimalsAdapter : BaseAdapter {
         var animalList = ArrayList<AnimalModel>()
         var context: Context? = null
 
@@ -48,7 +58,8 @@ class MainActivity : AppCompatActivity() {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
             val animal: AnimalModel = animalList[position]
 
-            var inflator = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            var inflator =
+                context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             var myView: View
 
             myView = if (animal.isDangerous) {
@@ -61,12 +72,16 @@ class MainActivity : AppCompatActivity() {
             myView.textViewDescription.text = animal.description
             myView.imageView.setImageResource(animal.image)
             myView.imageView.setOnClickListener {
-                val intent = Intent(context, AnimalInfo::class.java)
+                /*val intent = Intent(context, AnimalInfo::class.java)
                 intent.putExtra("name", animal.name)
                 intent.putExtra("description", animal.description)
                 intent.putExtra("image", animal.image)
 
-                context!!.startActivity(intent)
+                context!!.startActivity(intent)*/
+
+//                deleteItem(position)
+
+                addItem(position)
             }
             return myView
         }
@@ -83,8 +98,7 @@ class MainActivity : AppCompatActivity() {
 
         // important
         override fun getCount(): Int {
-           return animalList.size
+            return animalList.size
         }
-
     }
 }
